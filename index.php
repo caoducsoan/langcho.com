@@ -9,41 +9,46 @@ include('includes/header.php');
     <div class="container-fluid paddding mb-5">
         <div class="row mx-0">
             <?php
-            $querynew = mysqli_query($con, "select * from tblposts where tblposts.Is_Active=1 order by tblposts.PostingDate DESC limit 5 ");
-            if ($row = mysqli_fetch_array($querynew)) {
-
-                ?>
+            $querynew = mysqli_query($con, "SELECT * FROM tblposts WHERE tblposts.Is_Active = 1 ORDER BY tblposts.PostingDate DESC LIMIT 5");
+            $firstRow = mysqli_fetch_array($querynew);
+            
+            if ($firstRow) {
+            ?>
                 <div class="col-md-6 col-12 paddding animate-box" data-animate-effect="fadeIn">
-                    <div class="fh5co_suceefh5co_height"><img src="admin/postimages/<?php echo htmlentities($row['PostImage']); ?>" alt="img" />
+                    <div class="fh5co_suceefh5co_height">
+                        <img src="admin/postimages/<?php echo htmlentities($firstRow['PostImage']); ?>" alt="img" />
                         <div class="fh5co_suceefh5co_height_position_absolute"></div>
                         <div class="fh5co_suceefh5co_height_position_absolute_font">
-                            <div class=""><a href="javascript:void(0)" class="color_fff"> <i
-                                        class="fa fa-clock-o"></i>&nbsp;&nbsp;<?php echo htmlentities($row['PostingDate']); ?>
-                                </a></div>
-                            <div class=""><a href="news-details.php?nid=<?php echo htmlentities($row['id']) ?>"
-                                    class="fh5co_good_font"> <?php echo htmlentities($row['PostTitle']); ?> </a></div>
+                            <div class="">
+                                <a href="javascript:void(0)" class="color_fff">
+                                    <i class="fa fa-clock-o"></i>&nbsp;&nbsp;<?php echo htmlentities($firstRow['PostingDate']); ?>
+                                </a>
+                            </div>
+                            <div class="">
+                                <a href="news-details.php?nid=<?php echo htmlentities($firstRow['id']) ?>" class="fh5co_good_font">
+                                    <?php echo htmlentities($firstRow['PostTitle']); ?>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="col-md-6 soancd">
                     <div class="row">
                         <?php
-            }
-            $index = 0;
-            while ($row = mysqli_fetch_array($querynew)) {
-                $index++;
-                if ($index == 0)
-                    continue;
-                ?>
-                        <div class="col-md-6 col-6 paddding animate-box" data-animate-effect="fadeIn">
-                            <div class="fh5co_suceefh5co_height_2"><img src="admin/postimages/<?php echo htmlentities($row['PostImage']); ?>" alt="img" />
+                        $index = 0;
+                        mysqli_data_seek($querynew,0);
+                        while ($row = mysqli_fetch_array($querynew)) {
+                            $index++;
+                            if($index == 1) continue;
+                            if ($index > 4) break;
+
+                        ?>
+                         <div class="col-md-6 col-6 paddding animate-box" data-animate-effect="fadeIn">
+                            <div class="fh5co_suceefh5co_height_2"><img src="admin/postimages/<?php echo htmlentities($row['PostImage']); ?>" alt="img" style="width: 100%;"/>
                                 <div class="fh5co_suceefh5co_height_position_absolute"></div>
                                 <div class="fh5co_suceefh5co_height_position_absolute_font_2">
-                                    <div class=""><a href="javascript:void(0)" class="color_fff"> <i
-                                                class="fa fa-clock-o"></i>&nbsp;&nbsp;<?php echo htmlentities($row['PostingDate']); ?>
-                                        </a></div>
-                                    <div class=""><a href="news-details.php?nid=<?php echo htmlentities($row['id']) ?>"
-                                            class="fh5co_good_font_2"> <?php echo htmlentities($row['PostTitle']); ?> </a>
+                                    <div class=""><a href="javascript:void(0)" class="color_fff"> <i class="fa fa-clock-o"></i>&nbsp;&nbsp;<?php echo htmlentities($row['PostingDate']); ?></a></div>
+                                    <div class=""><a href="news-details.php?nid=<?php echo htmlentities($row['id']) ?>" class="fh5co_good_font_2"> <?php echo htmlentities($row['PostTitle']); ?> </a>
                                     </div>
                                 </div>
                             </div>
@@ -51,6 +56,9 @@ include('includes/header.php');
                     <?php } ?>
                 </div>
             </div>
+            <?php } else {
+                echo "<div style='text-align:center'>No post</div>";
+            }?>
 
         </div>
     </div>
@@ -62,10 +70,10 @@ include('includes/header.php');
             </div>
             <div class="owl-carousel owl-theme js" id="slider1">
                 <?php
-                $query = mysqli_query($con, "select tblposts.id as pid,tblposts.PostTitle as posttitle,tblposts.PostImage,tblcategory.CategoryName as category,tblcategory.id as cid,tblsubcategory.Subcategory as subcategory,tblposts.PostDetails as postdetails,tblposts.PostingDate as postingdate,tblposts.PostUrl as url from tblposts left join tblcategory on tblcategory.id=tblposts.CategoryId left join  tblsubcategory on  tblsubcategory.SubCategoryId=tblposts.SubCategoryId where tblposts.Is_Active=1 order by tblposts.viewCounter DESC ");
+                $query = mysqli_query($con, "SELECT tblposts.id as pid, tblposts.PostTitle as posttitle, tblposts.PostImage, tblcategory.CategoryName as category, tblcategory.id as cid, tblsubcategory.Subcategory as subcategory, tblposts.PostDetails as postdetails, tblposts.PostingDate as postingdate, tblposts.PostUrl as url FROM tblposts LEFT JOIN tblcategory ON tblcategory.id = tblposts.CategoryId LEFT JOIN tblsubcategory ON tblsubcategory.SubCategoryId = tblposts.SubCategoryId WHERE tblposts.Is_Active = 1 ORDER BY tblposts.viewCounter DESC");
                 while ($row = mysqli_fetch_array($query)) {
                     ?>
-                    <div class="item px-2">
+                    <div class="item px-2" style="width:100%;">
                         <div class="fh5co_latest_trading_img_position_relative">
                             <div class="fh5co_latest_trading_img">
                                 <img src="admin/postimages/<?php echo htmlentities($row['PostImage']); ?>"
@@ -86,16 +94,16 @@ include('includes/header.php');
         </div>
     </div>
     <?php
-    $query = mysqli_query($con, 'select * from tblcategory where Is_Active=1');
+    $query = mysqli_query($con, 'SELECT * FROM tblcategory WHERE Is_Active = 1');
     while ($row = mysqli_fetch_array($query)) {
-        $query1 = mysqli_query($con, 'select * from tblposts where Is_Active=1 and CategoryId=' . $row['id']);
+        $query1 = mysqli_query($con, 'SELECT * FROM tblposts WHERE Is_Active = 1 AND CategoryId =' . $row['id'] . ' LIMIT 6');
         $length = mysqli_num_rows($query1);
         if ($length == 0) {
             continue;
         }
-            ?>
-            <div class="container-fluid pb-4 pt-5">
-                <div class="container animate-box">
+    ?>
+    <div class="container-fluid pb-4 pt-5">
+        <div class="container animate-box">
                     <div>
                         <div class="fh5co_heading fh5co_heading_border_bottom py-2 mb-4">
                             <?php echo htmlentities($row['CategoryName']) ?></div>
@@ -103,7 +111,6 @@ include('includes/header.php');
                     <div class="owl-carousel owl-theme" id="slider2">
                         <?php
                         while ($row1 = mysqli_fetch_array($query1)) {
-                            var_dump($row1);
                             ?>
                             <div class="item px-2">
                                 <div class="fh5co_hover_news_img">
@@ -120,10 +127,10 @@ include('includes/header.php');
                         <?php } ?>
                     </div>
                 </div>
-            </div>
-        <?php
+    </div>
+    <?php
     } ?>
-    <!-- <div class="container-fluid fh5co_video_news_bg pb-4">
+<div class="container-fluid fh5co_video_news_bg pb-4">
     <div class="container animate-box" data-animate-effect="fadeIn">
         <div>
             <div class="fh5co_heading fh5co_heading_border_bottom pt-5 pb-2 mb-4  text-white">Video News</div>
@@ -235,7 +242,7 @@ include('includes/header.php');
             </div>
         </div>
     </div>
-</div> -->
+</div>
     <div class="container-fluid pb-4 pt-4 paddding">
         <div class="container paddding">
             <div class="row mx-0">
